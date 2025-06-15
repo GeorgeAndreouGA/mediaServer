@@ -3,7 +3,7 @@ SFTP
 
 . Install SSH
 
-1. sudo apt install openssh-server
+1. a) sudo apt install ssh , b) sudo systemctl start ssh , c) sudo systemctl enable ssh
 
 . Create an SFTP-only User
 
@@ -55,7 +55,7 @@ replace <sftpuser> with the name of the user for 2. , <foldername> with the name
 
 10. sudo systemctl restart ssh
 
-.  Test SFTP ( the password will be the same as step 3.
+.  Test SFTP ( the password will be the same as step 3. )
 
 11. sftp <sftpuser>@<your-server-ip>
 
@@ -65,4 +65,13 @@ replace <sftpuser> with the name of the user for 2. , <foldername> with the name
 
 SSH
  
+. Install SSH
+
+1. a) sudo apt install ssh , b) sudo systemctl start ssh , c) sudo systemctl enable ssh
+
+You can now ssh to the server with the user that is not forced to sftp only. Meaning the first user you created when installed the os ( If you followed the SFTP guide )
+
+. Access the server
+
+2. ssh <name of the user that has no sftp access only>@<your static ip address> 
 
