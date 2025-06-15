@@ -1,0 +1,80 @@
+Docker ( Both Docker Engine and Docker Compose are needed ) 
+
+a ) Docker Engine 
+
+Installation methods
+You can install Docker Engine in different ways, depending on your needs:
+
+Docker Engine comes bundled with Docker Desktop for Linux. This is the easiest and quickest way to get started.
+
+Set up and install Docker Engine from Docker's apt repository.
+
+Install it manually and manage upgrades manually.
+
+since we are using only cli we are going with the 2 method : 
+
+. Set up Docker's apt repository : 
+
+
+1. sudo apt-get update
+2. sudo apt-get install ca-certificates curl
+3. sudo install -m 0755 -d /etc/apt/keyrings
+4. sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+5. sudo chmod a+r /etc/apt/keyrings/docker.asc
+6. echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+7.sudo apt-get update
+
+. Install the Docker packages.
+
+8. sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+. Verify that the installation is successful by running the hello-world image:
+
+9. a) sudo docker run hello-world  b) sudo systemctl enable --now docker  
+
+b) Docker Compose
+
+10. mkdir -p "$HOME/.docker/cli-plugins" && \
+11. curl -sL "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o "$HOME/.docker/cli-plugins/docker-compose" && \
+12. chmod +x $HOME/.docker/cli-plugins/docker-compose
+
+
+Heimdall 
+
+1. mkdir Docker
+2. cd Docker
+3. mkdir Heimdall
+4. cd Heimdall
+5. nano heimdall.yml
+
+Add : 
+
+---
+services:
+  heimdall:
+    image: lscr.io/linuxserver/heimdall:latest
+    container_name: heimdall
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /path/to/heimdall/config:/config
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
+---
+
+6. docker compose -f /home/< name of the user >/Docker/Heimdall/heimdall.yml up -d
+7. Go to : http://<server-ip>:8080
+8. sudo docker ps ( check all the containers that are running )
+
+Kasm workspace
+
+
+
+
