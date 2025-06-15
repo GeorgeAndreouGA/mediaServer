@@ -55,6 +55,21 @@ replace <sftpuser> with the name of the user for 2. , <foldername> with the name
 
 10. sudo systemctl restart ssh
 
+. Mount external drive to server
+
+Once you connect the external drive ( better format it to exFAT ) to the server you have to mount it to /mnt/<foldername>/<name> ( step 6. )
+
+11. lsblk 
+12. sudo mount /dev/< partition of the external drive that you want to mount and not the whole external drive  > /mnt/<foldername>/<name>
+
+.  Mount Automatically on Boot
+
+13. sudo blkid
+14. sudo nano /etc/fstab
+Add a line like:
+UUID=<from step 13.> /mnt/<foldername>/<name>  auto  defaults  0  2
+
+
 .  Test SFTP ( the password will be the same as step 3. )
 
 11. sftp <sftpuser>@<your-server-ip>
