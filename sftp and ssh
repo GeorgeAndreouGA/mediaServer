@@ -1,0 +1,68 @@
+
+SFTP
+
+. Install SSH
+
+1. sudo apt install openssh-server
+
+. Create an SFTP-only User
+
+2. sudo adduser <sftpuser>
+3. sudo passwd <sftpuser>
+
+replace < > with the name of the user for 2. and < > with the password of the user for 3. 
+
+. Restrict SSH to SFTP Only
+
+4. sudo mkdir /mnt/<foldername>
+
+replace < > with your folder name 
+
+5. sudo nano /etc/ssh/sshd_config
+
+At the end of the file, add:
+
+Match User <sftpuser>
+    ForceCommand internal-sftp
+    PasswordAuthentication yes
+    ChrootDirectory /mnt/<foldername>
+    PermitTunnel no
+    AllowAgentForwarding no
+    AllowTcpForwarding no
+    X11Forwarding no
+
+ replace the first <sftpuser> with the name of the user for 2. <foldername> with the name that you gave to step 4.
+
+. The home directory must be owned by root and not writable by the SFTP user:
+ 
+6. sudo mkdir -p /mnt/<foldername>/<name>
+
+replace <foldername> with the name that you gave in step 4. and <name> with whatever you want
+
+7. sudo chown root:root /mnt/<foldername>
+
+ replace <foldername> with the name that you gave in step 4.
+ 
+8. sudo chmod 755 /mnt/<foldername>
+
+replace <foldername> with the name that you gave in step 4.
+
+9. sudo chown <sftpuser>:<sftpuser> /mnt/<foldername>/<name> 
+
+replace <sftpuser> with the name of the user for 2. , <foldername> with the name that you gave in step 4. and and <name> with the name that you gave in step 6.
+
+. Restart SSH
+
+10. sudo systemctl restart ssh
+
+.  Test SFTP ( the password will be the same as step 3.
+
+11. sftp <sftpuser>@<your-server-ip>
+
+             or
+  Download filezilla and test.
+
+
+SSH
+ 
+
