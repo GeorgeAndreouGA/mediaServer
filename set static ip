@@ -1,0 +1,55 @@
+#  Static IP Configuration on Linux:
+
+!! IMPORTANT !!
+
+This method may vary depending on the Linux distribution you are using.
+Please refer to the official documentation of your specific distribution for setting a static IP.
+This is a general method for Debian-based systems using /etc/network/interfaces.
+
+In a terminal ( the numbers are the commands ):
+
+. Find your network interface and current IP address
+
+1. ip a
+
+a) Identify the interface that provides your internet connection (e.g., eth0, enp0s3).
+
+b) Note the current IP address assigned to that interface. You will use this or another free IP address on your network.
+
+. Edit the interfaces configuration file
+
+2. sudo nano /etc/network/interfaces
+
+Add the following configuration (replace placeholders with your details):
+
+auto <interface>
+iface <interface> inet static
+    address <static-ip-address>
+    netmask <netmask>
+    gateway <gateway-ip>
+    dns-nameservers <primary-dns> <secondary-dns>
+
+Replace <interface> with the name you found in step 1 (e.g., eth0).
+
+Use a static IP address that is free and valid in your network.
+
+Set the netmask according to your network class (e.g., 255.255.255.0 for a class C network).
+
+The gateway is usually your router’s IP address (e.g., 192.168.1.1).
+
+For DNS servers, you can use your gateway IP as primary DNS and a public DNS like 8.8.8.8 as secondary.
+
+Save and exit the editor (in nano: CTRL+O then ENTER, then CTRL+X).
+
+. Restart the networking service to apply changes:
+
+3. sudo systemctl restart networking
+
+. Reboot the system to ensure everything loads properly:
+
+4. sudo reboot
+
+. Verify the static IP assignment after reboot:
+
+5. ip a
+
