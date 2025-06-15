@@ -27,7 +27,7 @@ This project provides a step-by-step guide to building your own Linux-based medi
 
 ## 🚀 Getting Started
 
-### 1. Requirements
+###  Requirements
 
 - A dedicated machine or virtual server
 - A Linux distribution (e.g., Ubuntu Server 22.04)
