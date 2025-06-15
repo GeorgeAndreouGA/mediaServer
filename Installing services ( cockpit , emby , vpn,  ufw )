@@ -67,4 +67,39 @@ It is best to route all the traffic of zerotier through the server so that the c
     0.0.0.0/0 via <zerotier server ip not actual server ip>
 
    Before the client connects make sure that it allows to route all the traffic through zerotier
-   
+
+Firewall ( ufw )
+
+. Install UFW 
+
+1. sudo apt update
+2. a) sudo apt install ufw -y b) sudo ufw enable
+
+
+. Default UFW Rules
+
+3. sudo ufw default deny incoming ( deny all listening ports of the server )
+4. sudo ufw default allow outgoing ( allow all incoming internet traffic to the server )
+
+Allow Required Ports ( allow all the ports of the services you have created e.g for emby allow 8096 ect )
+
+ See the man page for more info!!!
+
+e.g 
+
+if you want to allow specic ip's :
+
+5. sudo ufw allow from <IP_ADDRESS> to any port <PORT_NUMBER> 
+
+ <IP_ADDRESS> the ip address that you want to allow to use the port
+
+if you want to allow everyone :
+
+5.1. sudo ufw allow <PORT_NUMBER> 
+
+when you are done restart firewall: 
+
+6. sudo ufw reload
+7. sudo ufw status ( check rules )
+
+
