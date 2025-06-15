@@ -85,7 +85,7 @@ SSH
 
 You can now ssh to the server with the user that is not forced to sftp only. Meaning the first user you created when installed the os ( If you followed the SFTP guide )
 
-. Access the server
+. Access the server ( the password will be the same for the user without the sftp only. )
 
 2. ssh <name of the user that has no sftp access only>@<your static ip address> 
 
