@@ -1,0 +1,70 @@
+Install Cockpit, a web-based server management interface, follow the instructions based on your Linux distribution.
+
+
+1. sudo apt install cockpit -y
+2. sudo systemctl enable --now cockpit.socket
+
+Access it at: https://<your-server-ip>:9090
+
+
+Install Emby Server ( a media server )
+
+go to : https://emby.media/linux-server.html
+
+1. wget < link address of the .deb file . Choose the correct architecture > 
+2. sudo apt install ./< the downloaded file from step 1. e.g emby-server-deb_4.9.1.0_amd64.deb >
+3. sudo systemctl enable --now emby-server.service
+ 
+Access it at: http://<your-server-ip>:8096
+
+Install Vpn ( Access your home network with the services of your server from everywhere )
+
+The easiest method to do it is by installing zerotier on both the server and the client devices. Otherwise you can try installing wireguard or openvpn
+
+   Zerotier 
+
+ 1. curl -s https://install.zerotier.com | sudo bash
+ 2. sudo systemctl enable --now zerotier-one
+
+ After creating an account and a network to zerotier ( https://www.zerotier.com/ )  you will have a network id for the network you created 
+
+ 3. sudo zerotier-cli join <your-network-id>
+
+Now the server is on the network that you created.
+Install zerotier on the client device and join the same network
+On the server:
+
+4. ip a
+
+Now you will see another interface for zerotier with a virtual ip ( Better go to zerotier account and make tha ip of the server static )
+
+On the client device you can access the server's services through that virtual ip of the zerotier interface 
+
+It is best to route all the traffic of zerotier through the server so that the clients can access the whole network ( can access services not only of the server's wihtout the needing of the virtual ip )
+
+. Enable IP Forwarding on the Server
+
+5.  sudo nano /etc/sysctl.conf
+
+   Uncomment or add: net.ipv4.ip_forward=1
+   
+6. sudo sysctl -p
+
+. Set Up NAT on the Server
+
+7. sudo iptables -t nat -A POSTROUTING -o < your network interface, not zerotier >  -j MASQUERADE
+8. sudo apt install iptables-persistent -y
+9. sudo netfilter-persistent save
+
+.  Mark the Server as a ZeroTier Route Provider
+
+    Go to https://my.zerotier.com, and:
+
+    Open your ZeroTier network.
+
+    Under Advanced > Managed Routes, add:
+
+    0.0.0.0/0 via <zerotier server ip not actual server ip>
+
+   Before the client connects make sure that it allows to route all the traffic through zerotier
+   
