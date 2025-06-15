@@ -70,10 +70,18 @@ services:
 ---
 
 6. docker compose -f /home/< name of the user >/Docker/Heimdall/heimdall.yml up -d
-7. Go to : http://<server-ip>:8080
-8. sudo docker ps ( check all the containers that are running )
+7. sudo docker ps ( check all the containers that are running )
 
-Kasm workspace
+Go to : http://<server-ip>:8080
+
+Kasm workspace ( You have to install Docker Engine and Docker Compose )
+
+1. curl -O https://kasm-static-content.s3.amazonaws.com/kasm_release_1.17.0.7f020d.tar.gz
+2. tar -xf kasm_release_1.17.0.7f020d.tar.gz
+3. sudo bash kasm_release/install.sh -L < choose the port that it will listen e.g 8443 >
+
+Go to : https://<server-ip>:< port from step 3. > 
+
 
 
 
