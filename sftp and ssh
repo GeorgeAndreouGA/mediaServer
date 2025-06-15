@@ -69,10 +69,9 @@ Once you connect the external drive ( better format it to exFAT ) to the server 
 Add a line like:
 UUID=<from step 13.> /mnt/<foldername>/<name>  auto  defaults  0  2
 
-
 .  Test SFTP ( the password will be the same as step 3. )
 
-11. sftp <sftpuser>@<your-server-ip>
+15. sftp <sftpuser>@<your-server-ip>
 
              or
   Download filezilla and test.
