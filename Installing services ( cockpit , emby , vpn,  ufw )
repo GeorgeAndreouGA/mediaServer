@@ -16,6 +16,7 @@ go to : https://emby.media/linux-server.html
 3. sudo systemctl enable --now emby-server.service
  
 Access it at: http://<your-server-ip>:8096
+You can set up an ssl cert ( get https ) via certbot ( you will need a ddns e.g duckdns to always get your dynamic public ip ) or you can via generating you own ( you will need  reverse proxy e.g nginx ) because emby does not accept self signed.  
 
 Install Vpn ( Access your home network with the services of your server from everywhere )
 
