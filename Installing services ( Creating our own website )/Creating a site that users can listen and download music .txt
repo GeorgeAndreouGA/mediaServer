@@ -1,0 +1,116 @@
+1.   sudo mkdir -p /var/www/sitename/html  (creating a folder to store index.html ( client ) and admin.html ( admin ))
+
+2.   sudo chown -R $USER:$USER /var/www/sitename ( giving the right user permitions)
+
+3. installing node.js : Go to https://nodejs.org/en/download
+
+4. npm install express ( install it in /var/www/sitename )
+
+5. we will create a server.js in the /var/www/sitename ( see server.js) this is site is going to be for my music so your server.js will be different. It gets the songs from the server so make sure to change the path to server.js
+
+
+6. At the start of the server.js there is passwordHash.env that stores the password for the admin page with hash so we are going to be creating this passwordHash.env ( the name must be the same )
+
+6.1 npm install bcrypt dotenv ( install it in /var/www/sitename )
+
+6.2 nano generate-hash.js (Create a temporary script to generate your hash in /var/www/sitename , see generate-hash.js )
+
+6.3 node generate-hash.js ( run it )
+
+6.4 nano passwordHash.env ( create in /var/www/sitename , see passwordHash.env )
+
+6.5  rm generate-hash.js ( remove it , we don't need it now )
+
+7. we will add Rate limiting to the admin that restricts how many times a user (usually based on their IP address) can make requests to your server in a given amount of time.
+
+7.1 npm install express-rate-limit ( install in /var/www/sitename )
+
+7.2 The server.js has it implemented
+
+8. we will create a published.json that inside will have [] ( To store the published songs so first it is blank)
+
+9. we will now create the index.html and the admin.html ( create it in /var/www/sitename/html )
+
+9.1 nano index.html ( see index.html)
+
+9.2 nano admin.html ( see admin.html)
+
+If you want to make changes on how the client website looks edit the index.html. Same goes for the admin ( users won't have access to the admin page , password protected and can be access by " /admin " ad the end of the url)
+
+10. Now we will install pm2 so that the server.js can run in the backround and make so that it will start automaticly when reboots happen
+
+10.1 npm install -g pm2 ( install in /var/www/sitename )
+
+10.2 pm2 start server.js ( start the server.js)
+
+10.3 pm2 save
+
+10.4 pm2 startup ( after running this command PM2 will print a command )
+
+10.5 Copy and run that command.
+
+10.6 pm2 save
+
+11. Now we are going to be oppening our website to the internet and creating a valid ssl cert for http with certbot and having nginx as a revrse proxy ( sense both nginx and certbot are listeing to port 80 and no we can't stop nginx and then run certbot to create our ssl cert and then start nginx again because certbot needs that port to renew the ssl certs. So since we already have nginx as a reverse proxy for emby we are going to do the same for our website. No need to go to server.js to add the certbot ssl cert)
+
+11.1 Get a domain name ( if you want to get a free on you can go to https://www.duckdns.org/ it is a ddns service that keeps track of your dynamic public ip. Follow the guide to install it on your server)
+
+11.2 Port Forwarding  , On your home router:
+Forward port 80 → ( for certbot)
+Forward port 443 → ( for our https website)
+
+11.3 Server's firewall : Make sure that you have port 80 and 443 open on your server's firewall to everyone and that port 3000 is open only to to your server ( if your server.js is on port 3000)
+
+11.4 sudo apt install certbot python3-certbot-nginx ( we are installing a defferent vertion of certbot that is compatible with nginx)
+
+11.5 sudo nano /etc/nginx/sites-available/sitename
+
+  Here is the config ( chane the domain to the server name ( there are 2 ) and to the ssl certs ):
+
+  server {
+    server_name yourDomain.duckdns.org;
+
+    location / {
+        proxy_pass http://192.168.10.25:3000;  # or your Node.js port
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/yourDomain.duckdns.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/yourDomain.duckdns.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+server {
+    if ($host = yourDomain.duckdns.org) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80;
+    server_name yourDomain.duckdns.org;
+    return 404; # managed by Certbot
+
+
+}
+
+
+
+11.6 sudo ln -s /etc/nginx/sites-available/sitename /etc/nginx/sites-enabled/
+     sudo nginx -t  # test config
+     sudo systemctl reload nginx
+
+11.7 sudo certbot --nginx -d yourname.duckdns.org ( Run Certbot to install HTTPS certificate )
+
+11.8 Great now you can access your website with https for around the world.
+
+11.9 sudo certbot renew --force-renewal ( make sure that it does not fail to renew the ssl cert)
+
+11.10 certbot autorenews the certs autmaticly just make sure that nginx starts after reboots
+
+
